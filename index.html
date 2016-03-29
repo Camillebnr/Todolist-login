@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+
+<head>
+  <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src='https://apis.google.com/js/platform.js'></script>
+
+  <link href='https://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
+
+  <meta name="google-signin-client_id" content="58563134763-aj5qhecpug9hj6tq2mt71g0uhqa3hp3i.apps.googleusercontent.com">
+  <!-- <link rel='stylesheet' type='text/css' href='/resources/tutorial/css/example.css'> -->
+  <meta charset="utf-8" />
+</head>
+
+
+
+
+<body>
+  <form id="formulaire">
+    <input id="saisie">
+    <div id="afaire">
+    </div>
+    <div id="faites">
+    </div>
+  </form>
+
+  <script>
+  function startApp() {
+  var myDataRef = new Firebase('https://blistering-torch-4516.firebaseio.com');
+  document.getElementById('formulaire').onsubmit = function(evt) {
+    evt.preventDefault();
+    document.getElementById('saisie').value;
+    myDataRef.push({
+      name: document.getElementById('saisie').value,
+      done : false
+    });
+
+
+  };
+     myDataRef.on('child_added', function(snapshot) {
+       var message = snapshot.val();
+       console.log(message.name);
+       var afaire = document.getElementById('afaire');
+       afaire.innerHTML = afaire.innerHTML + '<p onclick="console.log(\' ' + message.name + ' \')">' + "<input type='checkbox' name'task'>" + message.name + "</p>";
+     }); 
+
+   }
+
+     function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail());
+
+  startApp()
+}
+
+
+  </script>
+
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+    <a href="#" onclick="signOut();">Sign out</a>
+<script>
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+</script>
+
+</body>
+</html>
